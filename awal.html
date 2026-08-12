@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loading</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(#dff3ff,#fff);display:flex;justify-content:center;align-items:center;height:100vh}
+.box{text-align:center;width:320px}
+h2{color:#333}
+.bar{height:12px;background:#ddd;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:#6bbcff;transition:all .8s}
+#percent{margin-top:14px;font-size:22px}
+#status{margin-top:8px;color:#777;height:22px}
+#jk{opacity:0;font-size:30px;font-weight:bold;transition:.6s}
+.shake{animation:s .35s}
+@keyframes s{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>Initializing Surprise...</h2>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<div id="percent">0%</div>
+<div id="status"></div>
+<div id="jk">Just kidding 😌</div>
+</div>
+<script>
+const fill=document.getElementById('fill');
+const p=document.getElementById('percent');
+const s=document.getElementById('status');
+const jk=document.getElementById('jk');
+
+const seq=[
+{pct:10,text:"Preparing your surprise...",wait:900},
+{pct:35,text:"Wrapping your gift...",wait:900},
+{pct:72,text:"Collecting our memories...",wait:900},
+{pct:99,text:"Adding the final touch...",wait:3000},
+{pct:"Error...",text:"",wait:3000,error:true},
+{pct:"Attempting recovery...",text:"Jangan Di Resfres...",wait:8000},
+{pct:"Recovery failed.",text:"",wait:4000},
+{pct:"JK",wait:1800}
+];
+let i=0;
+function step(){
+ let st=seq[i];
+ if(!st)return;
+ if(st.pct==="JK"){
+   p.style.display="none";
+   s.style.display="none";
+   document.querySelector('.bar').style.display="none";
+   jk.style.opacity=1;
+   
+   // Diubah menjadi redirect ke index.html setelah jeda waktu 1.8 detik
+   setTimeout(()=>{
+     window.location.href = "index.html";
+   },1800);
+   
+   return;
+ }
+ if(st.error){
+   document.body.classList.add("shake");
+   fill.style.background="#ff5b5b";
+   p.textContent="Error...";
+ }else if(typeof st.pct==="number"){
+   fill.style.width=st.pct+"%";
+   p.textContent=st.pct+"%";
+ }else{
+   p.textContent=st.pct;
+ }
+ s.textContent=st.text||"";
+ i++;
+ setTimeout(step,st.wait);
+}
+setTimeout(step,800);
+</script>
+</body>
+</html>
